@@ -13,6 +13,7 @@ int main(int argc, char const *argv[])
   if (argc < 4)
   {
     cout << "Usage: " << argv[0] << " <size> \"<matrix-inline>\" \"<b-array>\" <tolerance?> <max-iterations?>" << endl;
+    cout << "The matrix must be entered in one line" << endl;
     return 1;
   }
 
@@ -28,8 +29,8 @@ int main(int argc, char const *argv[])
     return 1;
   }
 
-  double tolerance = argc > 4 ? stod(argv[4]) : 1e-4;
-  int maxIterations = argc > 5 ? stoi(argv[5]) : 1000;
+  double tolerance = argc == 5 ? stod(argv[4]) : 1e-4;
+  int maxIterations = argc == 6 ? stoi(argv[5]) : 1000;
   double *x = new double[size]{0};
   double *_x = new double[size]{0};
 
