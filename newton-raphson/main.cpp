@@ -31,8 +31,8 @@ int main(int argc, char const *argv[])
   }
 
   double x = stod(argv[1]);
-  double tolerance = argc == 3 ? stod(argv[2]) : 1e-7;
-  int maxIterations = argc == 4 ? stoi(argv[3]) : 1000;
+  double tolerance = argc > 2 ? stod(argv[2]) : 1e-7;
+  int maxIterations = argc > 3 ? stoi(argv[3]) : 1000;
   double error = 1;
 
   cout << setprecision(15);

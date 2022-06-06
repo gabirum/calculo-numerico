@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <cstring>
 #include <vector>
+#include <cmath>
 
 using namespace std;
 
@@ -12,13 +13,13 @@ int main(int argc, char const *argv[])
 {
   if (argc < 4)
   {
-    cout << "Usage: " << argv[0] << " <size> \"<matrix-inline>\" \"<b-array>\" <tolerance?> <max-iterations?>" << endl;
+    cout << "Usage: " << argv[0] << " <size> \"<matrix-inline>\" \"<b-array>\" <relaxation?> <tolerance?> <max-iterations?>" << endl;
     cout << "The matrix must be entered in one line" << endl;
     return 1;
   }
 
   int size = stoi(argv[1]);
-  int matrixSize = size * size;
+  int matrixSize = (int)pow(size, 2);
 
   vector<double> a = parseArray(argv[2], matrixSize);
   vector<double> b = parseArray(argv[3], size);
@@ -29,8 +30,9 @@ int main(int argc, char const *argv[])
     return 1;
   }
 
-  double tolerance = argc == 5 ? stod(argv[4]) : 1e-4;
-  int maxIterations = argc == 6 ? stoi(argv[5]) : 1000;
+  double relaxation = argc > 4 ? stod(argv[4]) : 1;
+  double tolerance = argc > 5 ? stod(argv[5]) : 1e-2;
+  int maxIterations = argc > 6 ? stoi(argv[6]) : 1000;
   double *x = new double[size]{0};
   double *_x = new double[size]{0};
 
@@ -50,7 +52,7 @@ int main(int argc, char const *argv[])
         }
       }
 
-      x[i] = (b[i] - decrement) / a[i * size + i];
+      x[i] = ((1 - relaxation) * x[i]) + ((relaxation / a[i * size + i]) * (b[i] - decrement));
     }
 
     if (converge(x, _x, size, tolerance))
@@ -95,7 +97,7 @@ vector<double> parseArray(const char *str, int size)
   stringstream ss(str);
   string buffer;
 
-  while (ss >> buffer)
+  for (int i = 0; ss >> buffer && i < size; i++)
   {
     result.push_back(stod(buffer));
   }
