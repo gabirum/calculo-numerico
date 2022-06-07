@@ -1,13 +1,13 @@
 #include <iostream>
 #include <iomanip>
-#include <cstring>
 #include <vector>
+#include <cstring>
 #include <cmath>
 
 using namespace std;
 
-bool converge(double *x, double *_x, int size, double tolerance);
-vector<double> parseArray(const char *str, int size);
+bool converge(vector<double> x, vector<double> _x, double tolerance);
+vector<double> parseArray(char const *str, size_t const size);
 
 int main(int argc, char const *argv[])
 {
@@ -18,8 +18,8 @@ int main(int argc, char const *argv[])
     return 1;
   }
 
-  int size = stoi(argv[1]);
-  int matrixSize = (int)pow(size, 2);
+  size_t size = stol(argv[1]);
+  size_t matrixSize = (size_t)pow(size, 2);
 
   vector<double> a = parseArray(argv[2], matrixSize);
   vector<double> b = parseArray(argv[3], size);
@@ -32,19 +32,19 @@ int main(int argc, char const *argv[])
 
   double relaxation = argc > 4 ? stod(argv[4]) : 1;
   double tolerance = argc > 5 ? stod(argv[5]) : 1e-2;
-  int maxIterations = argc > 6 ? stoi(argv[6]) : 1000;
-  double *x = new double[size]{0};
-  double *_x = new double[size]{0};
+  size_t maxIterations = argc > 6 ? stol(argv[6]) : 1000ul;
+  vector<double> x(size, 0);
+  vector<double> _x(size, 0);
 
-  for (int iteration = 0; iteration < maxIterations; iteration++)
+  for (size_t iteration = 0; iteration < maxIterations; iteration++)
   {
-    memcpy(_x, x, sizeof(double) * size);
+    _x = x;
 
-    for (int i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++)
     {
       double decrement = 0;
 
-      for (int j = 0; j < size; j++)
+      for (size_t j = 0; j < size; j++)
       {
         if (j != i)
         {
@@ -55,13 +55,13 @@ int main(int argc, char const *argv[])
       x[i] = ((1 - relaxation) * x[i]) + ((relaxation / a[i * size + i]) * (b[i] - decrement));
     }
 
-    if (converge(x, _x, size, tolerance))
+    if (converge(x, _x, tolerance))
     {
       cout << setprecision(15);
 
-      for (int i = 0; i < size; i++)
+      for (size_t i = 0; i < size; i++)
       {
-        cout << "x" << i + 1 << ": " << x[i] << endl;
+        cout << "x" << i + 1 << ": " << x[i] << '\n';
       }
 
       return 0;
@@ -73,11 +73,11 @@ int main(int argc, char const *argv[])
   return 0;
 }
 
-bool converge(double *x, double *_x, int size, double tolerance)
+bool converge(vector<double> x, vector<double> _x, double tolerance)
 {
-  int count = 0;
+  size_t count = 0;
 
-  for (int i = 0; i < size; i++)
+  for (size_t i = 0; i < x.size(); i++)
   {
     double error = (x[i] - _x[i]) / x[i];
     double absoluteError = abs(error);
@@ -88,16 +88,16 @@ bool converge(double *x, double *_x, int size, double tolerance)
     }
   }
 
-  return count == size;
+  return count == x.size();
 }
 
-vector<double> parseArray(const char *str, int size)
+vector<double> parseArray(char const *str, size_t const size)
 {
   vector<double> result;
   stringstream ss(str);
   string buffer;
 
-  for (int i = 0; ss >> buffer && i < size; i++)
+  for (size_t i = 0; ss >> buffer && i < size; i++)
   {
     result.push_back(stod(buffer));
   }

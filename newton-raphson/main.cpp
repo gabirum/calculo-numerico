@@ -24,9 +24,7 @@ int main(int argc, char const *argv[])
 {
   if (argc < 2)
   {
-    cout << "Usage: " << argv[0] << " <x0>"
-         << " <tolerance?>"
-         << " <max-iterations?>" << endl;
+    cout << "Usage: " << argv[0] << " <x0> <tolerance?> <max-iterations?>" << endl;
     return 1;
   }
 
@@ -46,7 +44,7 @@ int main(int argc, char const *argv[])
 
     if (error < tolerance)
     {
-      cout << "f(" << x << ") = " << f(x) << endl;
+      cout << "f(" << x << ") = " << f(x) << '\n';
       return 0;
     }
   }
