@@ -44,7 +44,7 @@ int main(int argc, char const *argv[])
 
     if (error < tolerance)
     {
-      cout << "f(" << x << ") = " << f(x) << '\n';
+      cout << "f(" << x << ") = " << f(x) << endl;
       return 0;
     }
   }
